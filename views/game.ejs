@@ -1,0 +1,39 @@
+<%- include("header.ejs")%>
+
+
+<body class="d-flex justify-content-center align-items-center">
+
+  <div class="row border border-5 border-warning rounded-5 p-4 game">
+    <div id = "game-interface" class="col-7">
+
+      <div class="mb-5">
+        <h3>Guess The Word: </h3>
+        <h3 id = "user-guesses" class="ms-1"></h3>
+      </div>
+
+      <div class="d-grid gap-2 d-md-block mt-5">
+        <%letters.forEach((list)=>{%>
+        <% list.forEach((letter)=>{%>
+        <button id=<%=letter%> class="btn btn-warning mb-3 me-1 btn-block col-1 pe-4 letter-btn" ><%=letter%></button>
+        <% })  %>
+        <Br>
+        <% }) %>
+
+        <button id = "hint-btn" class = "btn btn-warning px-4">Hint</button>
+        </div>
+
+      <div class="mt-5">
+        <h3 ><span id = "score"> Score: 0 </span>  <span id = "lives">Lives: 8  </span><span id = "hints">hints: 3 </span> </h3>
+      </div>
+
+    </div>
+
+    <div id ="hangman-animation" class="col  ">
+      <canvas id = "cnv" width = "250" height = "300">
+
+      </canvas>
+    </div>
+  </div>
+
+  <%- include("footer.ejs") %>
+
