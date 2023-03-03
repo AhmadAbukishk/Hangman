@@ -28,7 +28,8 @@ let rightGuessCount = 0;
 let lettersChosen = [];
 let lives = 8;
 let hints = 3;
-const word = chooseWord();
+let word = chooseWord();
+$("#next-btn").hide();
 console.log(word);
 
 
@@ -65,7 +66,9 @@ const test = $(".letter-btn").click(function (e) {
         console.log(rightGuessCount);
         
         //if the player guessed all the letters right he'll get the score he earned
-        updateScore();
+        if(rightGuessCount === word.length){
+            $('#next-btn').show();
+        }
 
         if(lives == 0){
             lostInterface();
@@ -105,7 +108,10 @@ $("#hint-btn").click(function (e) {
 
     $("#hints").html('hints: ' + --hints);
     $("#user-guesses").html(guess);
-    updateScore();
+    if(rightGuessCount === word.length){
+        $('#next-btn').show();
+    }
+    
 
     } else {
         window.alert("You used all your hints");
@@ -115,6 +121,12 @@ $("#hint-btn").click(function (e) {
 });
 
 
+
+$("#next-btn").click(function (e) { 
+    e.preventDefault();
+    console.log("BITCH");
+    newRound();
+});
 
 
 
@@ -137,11 +149,20 @@ function replace(old, rep, ind){
     return old.substring(0, ind) + rep + old.substring(ind+1); 
 }
 
-function updateScore(){
-    if(rightGuessCount === word.length ){
-        score += rightGuessCount;
-        $("#score").html(`Score: ${score}`);
-    }
+function newRound(){
+    
+    score += rightGuessCount;
+    $("#score").html(`Score: ${score}`);
+    word = chooseWord();
+    rightGuessCount = 0;
+
+    lettersChosen.forEach(element => {
+        $("#" + element).removeClass('btn-secondary');
+        $("#" + element).addClass('btn-warning');
+    });
+
+    lettersChosen = [];
+    
 }
 
 
