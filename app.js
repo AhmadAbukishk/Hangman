@@ -1,37 +1,117 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const  fs = require('fs');
+const mongoose = require('mongoose');
+const { NormalModule } = require('webpack');
 
 const app = express();
 
+//mongoDB
+const uri = 'mongodb+srv://Ahmad_Abukishk:3K2y5kjBIMw6zLSb@atlascluster.qpxnltf.mongodb.net/HangmanUsers';
+mongoose.connect(uri);
+
+const HangmanUsersSchema = new mongoose.Schema({
+    Name: String,
+    Email: String, 
+    Password:  String
+})
+
+const User = mongoose.model('User', HangmanUsersSchema);
+
+
+
 // for ejs
 app.use(express.static("./public"));
-app.use(bodyParser.json())
 app.set("view engine", "ejs");
 
+//body-parser
+app.use(bodyParser.urlencoded({ extended: false }));
+
+
 const letter = [['a', 'b', 'c', 'd', 'e', 'f', 'g'], ['h', 'i', 'j', 'k', 'l', 'm', 'n'], ['o', 'p', 'q', 'r', 's', 't', 'u'], ['v', 'w', 'x', 'y', 'z']];
- 
+let logedUser = {
+    logged: false,
+    email: ''
+};
 
 // game route
 app.get("/", (req, res)=>{
-    res.render("game", {letters: letter})
-    // fs.readFile("./words.json", "utf8", (err, data)=>{        
-    //     if(!err){
-    //         const words = JSON.parse(data);
-        
-    //         console.log(words);
-    //     }
-    // });
-    
-    
+    if(logedUser.logged === false) res.redirect("/login")
+    res.render("Menu")    
 })
+
+app.get("/game", (req, res)=>{
+    res.render("game",  {letters: letter})
+})
+
+app.get("/login", (req, res)=>{
+    res.render("login")
+})
+
+app.get("/register", (req, res)=>{
+    res.render("register")
+})
+
 
 app.post("/", (req, res)=>{
-    const jsonData = JSON.parse("words.json");
-    console.log(jsonData.words[3]);
-
-
+    let page = req.body.button;
+    res.redirect("/" + page);
 })
+
+
+app.post("/login", (req, res)=>{
+
+    const email = req.body.email;
+    const pass = req.body.password;
+    
+    User.findOne({Email: email}, (err, user)=>{
+        console.log(pass);
+        
+        if(!err){
+            if(user !== null && user.Password === pass) {
+                logedUser.logged = true;
+                logedUser.email = user.Email
+                res.redirect('/')
+            } else {
+                res.redirect("/login")
+            }
+
+        } else {
+            console.log('something went wrong');
+        }
+    })
+})
+
+
+app.post("/register", (req, res)=> {
+    const name = req.body.name;
+    const email = req.body.email;
+    const pass = req.body.password;
+
+    User.findOne({Email: email}, (err, user)=>{
+        if(!err){
+            if(user === null){
+                const  newUser = new User( 
+                    {
+                        Name: name,
+                        Email: email,
+                        Password: pass
+                    }
+                )
+
+                newUser.save();
+                res.redirect("/login");
+            } else {
+                res.redirect("/register")
+            }
+        }
+    })
+})
+
+app.post("/toRegister", (req, res)=> {
+    res.redirect("/register");
+})
+
 
 // creating a server
 app.listen(3000, ()=>{

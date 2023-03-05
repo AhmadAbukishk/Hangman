@@ -155,10 +155,11 @@ function newRound(){
     $("#score").html(`Score: ${score}`);
     word = chooseWord();
     rightGuessCount = 0;
+    $("#next-btn").hide();
 
     lettersChosen.forEach(element => {
-        $("#" + element).removeClass('btn-secondary');
-        $("#" + element).addClass('btn-warning');
+        $(`#${element}`).removeClass('btn-secondary');
+        $(`#${element}`).addClass('btn-warning');
     });
 
     lettersChosen = [];
@@ -275,7 +276,10 @@ function lostInterface(){
     $("#game-interface").html(
         `<h1 class = "mt-5 display-2"> You Lost </h1>
          <h1>Score: ${score}</h1> 
-         <button id = "Main-Menu" class = "btn btn-lg btn-warning">Main Menu</button>`
+         <form method = 'post' action = '/'>
+            <input type = "hidden" name = "button" value = "">
+            <button id = "Main-Menu" class = "btn btn-lg btn-warning">Main Menu</button>
+         </form>`
     );
 }
 

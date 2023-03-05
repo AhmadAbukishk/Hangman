@@ -1,0 +1,22 @@
+<%- include("header.ejs")%>
+
+
+<body class="d-flex justify-content-center align-items-center">
+    <div class="row border border-5 border-warning rounded-5 p-4 game">
+        <form method = "post" action="/login">
+            <label for="email-address" class = "form-label ">Email Address</label>
+            <input type="email" class = "form-control" id = "email-address" name = "email">
+
+            <label for="password" class = "form-label mt-2">Password</label>
+            <input type="password" class = "form-control" id = "password" name = "password">
+            
+            <button type = "submit"  id = "login-btn"  class = "btn btn-lg btn-warning mt-5 px-5 ms-4" >Login</button>
+            <BR></BR>
+            <a href="/register" class = "ms-4">Create a new account</a> 
+
+        </form>
+
+        
+
+    </div>
+</body>
