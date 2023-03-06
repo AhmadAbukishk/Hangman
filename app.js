@@ -10,13 +10,25 @@ const app = express();
 const uri = 'mongodb+srv://Ahmad_Abukishk:3K2y5kjBIMw6zLSb@atlascluster.qpxnltf.mongodb.net/HangmanUsers';
 mongoose.connect(uri);
 
-const HangmanUsersSchema = new mongoose.Schema({
-    Name: String,
-    Email: String, 
-    Password:  String
-})
+const HangmanUsersSchema = new mongoose.Schema(
+    {
+        Name: String,
+        Email: String, 
+        Password:  String
+    }
+)
+
+
+const UserGames = new mongoose.Schema(
+    {
+        User: String,
+        Score: Number,
+        Words: Number
+    }
+)
 
 const User = mongoose.model('User', HangmanUsersSchema);
+const Game = mongoose.model('Game', UserGames);
 
 
 
@@ -52,6 +64,13 @@ app.get("/register", (req, res)=>{
     res.render("register")
 })
 
+app.get("/standings", (req, res)=> {
+    Game.find().sort({Score: -1}).sort({Words: -1}).limit(5).exec((err, games)=> {
+        console.log(games);
+        res.render("standings", {games: games});
+    });
+
+})
 
 app.post("/", (req, res)=>{
     let page = req.body.button;
@@ -65,7 +84,6 @@ app.post("/login", (req, res)=>{
     const pass = req.body.password;
     
     User.findOne({Email: email}, (err, user)=>{
-        console.log(pass);
         
         if(!err){
             if(user !== null && user.Password === pass) {
@@ -111,6 +129,33 @@ app.post("/register", (req, res)=> {
 app.post("/toRegister", (req, res)=> {
     res.redirect("/register");
 })
+
+
+app.post("/finish", (req, res)=>{
+    const score = req.body.score;
+    const words = req.body.words;
+
+    User.findOne({Email: logedUser.email}, (err, user)=>{
+        if(!err){ 
+            console.log(user)
+            const game = new Game(
+                {
+                    User: user.Email,
+                    Score: score,
+                    Words: words
+                }
+            )
+            console.log(game);
+            game.save();
+            res.redirect("/");
+        }
+    })
+
+    
+
+})
+
+app.post("")
 
 
 // creating a server

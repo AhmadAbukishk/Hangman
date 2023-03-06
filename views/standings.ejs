@@ -1,0 +1,20 @@
+<%- include("header.ejs")%>
+
+
+<body class="d-flex justify-content-center align-items-center">
+    <div class="row justify-content-md-center border border-5 border-warning rounded-5 p-4 game"> 
+        <div class = "col-11">
+            <% games.forEach((game)=>{%>
+                <h3><span class = "me-5">User: <%=game.User%> </span> <span class = "ms-5">Words: <%=game.Words%> </span><span class = "ms-5">Score: <%=game.Score%></span></h3>
+                <hr>
+            <%})%>
+        </div>
+        
+
+        <form method = "post" action = "/" class = "col-2 mt-5">   
+            <input name = "button" value = "" type="hidden">
+            <button type = "submit" class = "btn btn-lg btn-warning"> Back </button>
+        </form>
+    </div>
+    
+</body>

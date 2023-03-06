@@ -24,6 +24,7 @@ const words = [
 
 let guess;
 let score = 0;
+let count = 0;
 let rightGuessCount = 0;
 let lettersChosen = [];
 let lives = 8;
@@ -155,6 +156,7 @@ function newRound(){
     $("#score").html(`Score: ${score}`);
     word = chooseWord();
     rightGuessCount = 0;
+    count++;
     $("#next-btn").hide();
 
     lettersChosen.forEach(element => {
@@ -276,8 +278,10 @@ function lostInterface(){
     $("#game-interface").html(
         `<h1 class = "mt-5 display-2"> You Lost </h1>
          <h1>Score: ${score}</h1> 
-         <form method = 'post' action = '/'>
-            <input type = "hidden" name = "button" value = "">
+         <h1>Words: ${count}</h1> 
+         <form method = 'post' action = '/finish'>
+            <input type = "hidden" name = "score" value = "${score}">
+            <input type = "hidden" name = "words" value = "${count}">
             <button id = "Main-Menu" class = "btn btn-lg btn-warning">Main Menu</button>
          </form>`
     );
