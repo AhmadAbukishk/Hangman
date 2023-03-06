@@ -2,7 +2,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const  fs = require('fs');
 const mongoose = require('mongoose');
-const { NormalModule } = require('webpack');
 
 const app = express();
 
